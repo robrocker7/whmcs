@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from clients import WHMCSClient
+from clients import Client
 from connection import APIConn
 
 class WHMCS:
@@ -27,7 +27,7 @@ class WHMCS:
 
         client_list = []
         for client in clients:
-            client_list.append(WHMCSClient(data=client))
+            client_list.append(Client(data=client))
         return client_list
 
     def client_get_details(self, client_id, email=None):
@@ -38,5 +38,25 @@ class WHMCS:
             self.data['email'] = email
 
         data = self.send_call()
-        return WHMCSClient(data=data)
+        return Client(data=data)
 
+    # ORDER API CALLS
+    def order_get_set(self,
+                      limitstart=0,
+                      limitnum=25,
+                      id=None,
+                      userid=None,
+                      status=None):
+        
+        self.data['action'] = "getorders"
+        self.data['limitnum'] = limitnum
+        self.data['limitstart'] = limitstart
+        if id is not None:
+            self.data['id'] = id
+        if userid is not None:
+            self.data['userid'] = userid
+        if status is not None:
+            self.data['status'] = status
+
+        data = self.send_call()
+        print data
